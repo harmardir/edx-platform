@@ -94,7 +94,14 @@ class RegistrationFieldsContext(APIView):
         want to send those fields which can be saved.
         """
         return (field in self.user_profile_fields or field in ["terms_of_service", "honor_code"] or
-                field in configuration_helpers.get_value('extended_profile_fields', []))
+                field in configuration_helpers.get_value('extended_profile_fields', [
+                    'nationality',
+                    'job_title',
+                    'institution_name',
+                    'institution_type',
+                    'age_bracket',
+                    'disability',
+                ]))
 
     def get_fields(self):
         """
