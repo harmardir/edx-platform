@@ -452,7 +452,8 @@ class CourseGradeReport:
         Returns a list of all applicable column headers for this grade report.
         """
         return (
-            ["Student ID", "Email", "Username"] +
+            ["Student ID", "Email", "Username", "Full Name"] +
+            ["Gender","Nationality","Job Title","Institution Name", "Instituation Type","Age Bracket","Disability"] +
             self._grades_header(context) +
             (['Cohort Name'] if context.cohorts_enabled else []) +
             [f'Experiment Group ({partition.name})' for partition in context.course_experiments] +
@@ -718,7 +719,8 @@ class CourseGradeReport:
                     error_rows.append([user.id, user.username, str(error)])
                 else:
                     success_rows.append(
-                        [user.id, user.email, user.username] +
+                        [user.id, user.email, user.username, user.profile.name] +
+                        self._user_extra_info(user) +
                         self._user_grades(course_grade, context) +
                         self._user_cohort_group_names(user, context) +
                         self._user_experiment_group_names(user, context) +
@@ -728,6 +730,16 @@ class CourseGradeReport:
                         [_user_enrollment_status(user, context.course_id)]
                     )
             return success_rows, error_rows
+        
+    def _user_extra_info(self, user):
+        """
+        Return user's extra info
+        """
+        try:
+            extrainfo = user.extrainfo
+            return [extrainfo.nationality, extrainfo.job_title, extrainfo.institution_name, extrainfo.institution_type, extrainfo.age_bracket, extrainfo.disability]
+        except Exception as e:
+            return ["", "", "", "", "", ""]
 
 
 class ProblemGradeReport(GradeReportBase):
@@ -773,7 +785,7 @@ class ProblemGradeReport(GradeReportBase):
         Returns:
             list: combined header and scorable blocks
         """
-        header_row = list(self._problem_grades_header().values()) + ['Enrollment Status', 'Grade']
+        header_row = list(self._problem_grades_header().values()) + ["Gender","Nationality","Job Title","Institution Name", "Instituation Type","Age Bracket","Disability"] + ['Enrollment Status', 'Grade']
         return header_row + _flatten(list(context.graded_scorable_blocks_header.values()))
 
     def _error_headers(self):
@@ -839,12 +851,23 @@ class ProblemGradeReport(GradeReportBase):
             )
             success_rows.append(
                 [student.id, student.email, student.username] +
+                self._user_extra_info(student) + 
                 [enrollment_status, course_grade.percent] +
                 _flatten(earned_possible_values)
             )
             self.log_additional_info_for_testing(context, 'ProblemGradeReport: Added rows')
 
         return success_rows, error_rows
+    
+    def _user_extra_info(self, user):
+        """
+        Return user's extra info
+        """
+        try:
+            extrainfo = user.extrainfo
+            return [extrainfo.nationality, extrainfo.job_title, extrainfo.institution_name, extrainfo.institution_type, extrainfo.age_bracket, extrainfo.disability]
+        except Exception as e:
+            return ["", "", "", "", "", ""]
 
     def _batched_rows(self, context):
         """
