@@ -737,7 +737,7 @@ class CourseGradeReport:
         """
         try:
             extrainfo = user.extrainfo
-            return [extrainfo.nationality, extrainfo.job_title, extrainfo.institution_name, extrainfo.institution_type, extrainfo.age_bracket, extrainfo.disability]
+            return [extrainfo.nationality_display, extrainfo.job_title, extrainfo.institution_name, extrainfo.institution_type_display, extrainfo.age_bracket_display, extrainfo.disability_display]
         except Exception as e:
             return ["", "", "", "", "", ""]
 
@@ -864,8 +864,9 @@ class ProblemGradeReport(GradeReportBase):
         Return user's extra info
         """
         try:
+            profile = user.profile
             extrainfo = user.extrainfo
-            return [extrainfo.nationality, extrainfo.job_title, extrainfo.institution_name, extrainfo.institution_type, extrainfo.age_bracket, extrainfo.disability]
+            return [extrainfo.nationality_display, extrainfo.job_title, extrainfo.institution_name, extrainfo.institution_type_display, extrainfo.age_bracket_display, extrainfo.disability_display]
         except Exception as e:
             return ["", "", "", "", "", ""]
 

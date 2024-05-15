@@ -147,7 +147,7 @@ def enrolled_students_features(course_key, features):
         student_dict = {feature: extract_attr(student, feature) for feature in student_features}
         profile = student.profile
         if profile is not None:
-            profile_dict = {feature: extract_attr(profile, feature) for feature in profile_features}
+            profile_dict = {feature: extract_attr(profile, feature)  or "" for feature in profile_features}
             student_dict.update(profile_dict)
 
             # now fetch the requested meta fields
@@ -165,12 +165,12 @@ def enrolled_students_features(course_key, features):
             extrainfo = student.extrainfo
             extrainfo_dict = {feature: extract_attr(extrainfo, feature) or "" for feature in extrainfo_features}
             extrainfo_dict.update({
-                "nationality": extrainfo.nationality or "",
+                "nationality": extrainfo.nationality_display or "",
                 "job_title": extrainfo.job_title or "",
                 "institution_name": extrainfo.institution_name or "",
-                "institution_type": extrainfo.institution_type or "",
-                "age_bracket": extrainfo.age_bracket or "",
-                "disability": extrainfo.disability or "",
+                "institution_type": extrainfo.institution_type_display or "",
+                "age_bracket": extrainfo.age_bracket_display or "",
+                "disability": extrainfo.disability_display or "",
             })
             student_dict.update(extrainfo_dict)
         except Exception as e:
