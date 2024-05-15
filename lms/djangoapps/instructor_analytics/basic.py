@@ -37,6 +37,7 @@ STUDENT_FEATURES = ('id', 'username', 'first_name', 'last_name', 'is_staff', 'em
 PROFILE_FEATURES = ('name', 'language', 'location', 'year_of_birth', 'gender',
                     'level_of_education', 'mailing_address', 'goals', 'meta',
                     'city', 'country')
+EXTRAINFO_FEATURES = ("nationality", "job_title", "institution_name", "institution_type", "age_bracket", "disability")
 PROGRAM_ENROLLMENT_FEATURES = ('external_user_key', )
 ORDER_ITEM_FEATURES = ('list_price', 'unit_cost', 'status')
 ORDER_FEATURES = ('purchase_time',)
@@ -132,6 +133,7 @@ def enrolled_students_features(course_key, features):
         """ convert student to dictionary """
         student_features = [x for x in STUDENT_FEATURES if x in features]
         profile_features = [x for x in PROFILE_FEATURES if x in features]
+        extrainfo_features = [x for x in EXTRAINFO_FEATURES if x in features]
 
         # For data extractions on the 'meta' field
         # the feature name should be in the format of 'meta.foo' where
@@ -159,6 +161,21 @@ def enrolled_students_features(course_key, features):
             meta_city = meta_dict.get('city')
             if include_city_column and meta_city:
                 student_dict['city'] = meta_city
+        try:
+            extrainfo = student.extrainfo
+            extrainfo_dict = {feature: extract_attr(extrainfo, feature) or "" for feature in extrainfo_features}
+            extrainfo_dict.update({
+                "nationality": extrainfo.nationality or "",
+                "job_title": extrainfo.job_title or "",
+                "institution_name": extrainfo.institution_name or "",
+                "institution_type": extrainfo.institution_type or "",
+                "age_bracket": extrainfo.age_bracket or "",
+                "disability": extrainfo.disability or "",
+            })
+            student_dict.update(extrainfo_dict)
+        except Exception as e:
+            extrainfo_dict = {feature: "" for feature in extrainfo_features}
+            student_dict.update(extrainfo_dict)
 
         if include_cohort_column:
             # Note that we use student.course_groups.all() here instead of
