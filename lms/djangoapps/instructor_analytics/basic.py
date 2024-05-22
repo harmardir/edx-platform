@@ -32,12 +32,16 @@ from openedx.core.djangolib.markup import HTML, Text
 log = logging.getLogger(__name__)
 
 
-STUDENT_FEATURES = ('id', 'username', 'first_name', 'last_name', 'is_staff', 'email',
-                    'date_joined', 'last_login')
-PROFILE_FEATURES = ('name', 'language', 'location', 'year_of_birth', 'gender',
-                    'level_of_education', 'mailing_address', 'goals', 'meta',
-                    'city', 'country')
-EXTRAINFO_FEATURES = ("nationality", "job_title", "institution_name", "institution_type", "age_bracket", "disability")
+STUDENT_FEATURES = ('id', 'email', 'username', 'last_login', 'date_joined')
+PROFILE_FEATURES = ('name','gender')
+EXTRAINFO_FEATURES = (
+    "nationality",
+    "job_title",
+    "institution_name",
+    "institution_type",
+    "age_bracket",
+    "disability"
+)
 PROGRAM_ENROLLMENT_FEATURES = ('external_user_key', )
 ORDER_ITEM_FEATURES = ('list_price', 'unit_cost', 'status')
 ORDER_FEATURES = ('purchase_time',)
@@ -147,8 +151,10 @@ def enrolled_students_features(course_key, features):
         student_dict = {feature: extract_attr(student, feature) for feature in student_features}
         profile = student.profile
         if profile is not None:
-            profile_dict = {feature: extract_attr(profile, feature)  or "" for feature in profile_features}
-            student_dict.update(profile_dict)
+            profile_dict = {feature: extract_attr(profile, feature) or "" for feature in profile_features}
+            profile_dict.update({
+            "gender": profile.gender_display or "",
+        })
 
             # now fetch the requested meta fields
             meta_dict = json.loads(profile.meta) if profile.meta else {}
@@ -161,17 +167,20 @@ def enrolled_students_features(course_key, features):
             meta_city = meta_dict.get('city')
             if include_city_column and meta_city:
                 student_dict['city'] = meta_city
+            
+            student_dict.update(profile_dict)
+
         try:
             extrainfo = student.extrainfo
             extrainfo_dict = {feature: extract_attr(extrainfo, feature) or "" for feature in extrainfo_features}
             extrainfo_dict.update({
-                "nationality": extrainfo.nationality_display or "",
-                "job_title": extrainfo.job_title or "",
-                "institution_name": extrainfo.institution_name or "",
-                "institution_type": extrainfo.institution_type_display or "",
-                "age_bracket": extrainfo.age_bracket_display or "",
-                "disability": extrainfo.disability_display or "",
-            })
+            "nationality": extrainfo.nationality_display or "",
+            "job_title": extrainfo.job_title or "",
+            "institution_name": extrainfo.institution_name or "",
+            "institution_type": extrainfo.institution_type_display or "",
+            "age_bracket": extrainfo.age_bracket_display or "",
+            "disability": extrainfo.disability_display or "",
+        })
             student_dict.update(extrainfo_dict)
         except Exception as e:
             extrainfo_dict = {feature: "" for feature in extrainfo_features}
