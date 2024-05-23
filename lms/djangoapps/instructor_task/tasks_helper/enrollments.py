@@ -14,6 +14,9 @@ from common.djangoapps.student.models import CourseEnrollment  # lint-amnesty, p
 from .runner import TaskProgress
 from .utils import upload_csv_to_report_store  # lint-amnesty, pylint: disable=unused-import
 
+
+from custom_reg_form.models import ExtraInfo
+
 TASK_LOG = logging.getLogger('edx.celery.task')
 FILTERED_OUT_ROLES = ['staff', 'instructor', 'finance_admin', 'sales_admin']
 
@@ -64,10 +67,36 @@ def upload_students_csv(_xmodule_instance_args, _entry_id, course_id, task_input
     current_step = {'step': 'Calculating Profile Info'}
     task_progress.update_task_state(extra_meta=current_step)
 
-    # compute the student features table and format it
+    # compute the student features table
     query_features = task_input.get('features')
     student_data = enrolled_students_features(course_id, query_features)
-    header, rows = format_dictlist(student_data, query_features)
+
+    # Extend student_data with custom fields
+    extended_student_data = []
+    for student in student_data:
+        user_id = student['id']
+        try:
+            extra_info = ExtraInfo.objects.get(user_id=user_id)
+            student['nationality'] = extra_info.nationality
+            student['job_title'] = extra_info.job_title
+            student['institution_name'] = extra_info.institution_name
+            student['institution_type'] = extra_info.institution_type
+            student['age_bracket'] = extra_info.age_bracket
+            student['disability'] = extra_info.disability
+        except ExtraInfo.DoesNotExist:
+            student['nationality'] = ''
+            student['job_title'] = ''
+            student['institution_name'] = ''
+            student['institution_type'] = ''
+            student['age_bracket'] = ''
+            student['disability'] = ''
+        extended_student_data.append(student)
+
+    # Define the additional headers for custom fields
+    custom_fields = ['nationality', 'job_title', 'institution_name', 'institution_type', 'age_bracket', 'disability']
+
+    # Format the data into headers and rows
+    header, rows = format_dictlist(extended_student_data, query_features + custom_fields)
 
     task_progress.attempted = task_progress.succeeded = len(rows)
     task_progress.skipped = task_progress.total - task_progress.attempted
