@@ -1428,8 +1428,7 @@ def get_students_features(request, course_id, csv=False):  # pylint: disable=red
         query_features = [
             'id', 'username', 'name', 'email', 'language', 'location',
             'year_of_birth', 'gender', 'level_of_education', 'mailing_address',
-            'goals', 'enrollment_mode', 'last_login', 'date_joined', 'external_user_key',
-            'nationality', 'job_title', 'institution_name', 'institution_type', 'age_bracket', 'disability'
+            'goals', 'enrollment_mode', 'last_login', 'date_joined', 'external_user_key'
         ]
 
     # Provide human-friendly and translatable names for these features. These names
@@ -1451,12 +1450,6 @@ def get_students_features(request, course_id, csv=False):  # pylint: disable=red
         'last_login': _('Last Login'),
         'date_joined': _('Date Joined'),
         'external_user_key': _('External User Key'),
-        'nationality': _('Nationality'),
-        'job_title': _('Job Title'),
-        'institution_name': _('Institution Name'),
-        'institution_type': _('Institution Type'),
-        'age_bracket': _('Age Bracket'),
-        'disability': _('Disability'),
     }
 
     if is_course_cohorted(course.id):
@@ -1468,6 +1461,11 @@ def get_students_features(request, course_id, csv=False):  # pylint: disable=red
         query_features.append('team')
         query_features_names['team'] = _('Team')
 
+    # For compatibility reasons, city and country should always appear last.
+    query_features.append('city')
+    query_features_names['city'] = _('City')
+    query_features.append('country')
+    query_features_names['country'] = _('Country')
 
     if not csv:
         student_data = instructor_analytics_basic.enrolled_students_features(course_key, query_features)
