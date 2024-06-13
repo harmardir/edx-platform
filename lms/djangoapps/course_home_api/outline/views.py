@@ -221,6 +221,8 @@ class OutlineTabView(RetrieveAPIView):
         is_staff = bool(has_access(request.user, 'staff', course_key))
         show_enrolled = is_enrolled or is_staff
         enable_proctored_exams = False
+        course_units = []
+
         if show_enrolled:
             course_blocks = get_course_outline_block_tree(request, course_key_string, request.user)
             date_blocks = get_course_date_blocks(course, request.user, request, num_assignments=1)
@@ -255,6 +257,25 @@ class OutlineTabView(RetrieveAPIView):
             except UnavailableCompletionData:
                 start_block = get_start_block(course_blocks)
                 resume_course['url'] = start_block['lms_web_url']
+
+            # Collect unit-level blocks
+            def collect_units(block):
+                if block['type'] == 'vertical':
+                    course_units.append({
+                        'id': block['id'],
+                        'type': block['type'],
+                        'display_name': block['display_name'],
+                        'lms_web_url': block['lms_web_url'],
+                    })
+                for child_id in block.get('children', []):
+                    child_block = course_blocks['blocks'].get(child_id)
+                    if child_block:
+                        collect_units(child_block)
+
+            if course_blocks:
+                for block_id, block_data in course_blocks['blocks'].items():
+                    if block_data['type'] == 'course':
+                        collect_units(block_data)
 
         elif allow_public_outline or allow_public or user_is_masquerading:
             course_blocks = get_course_outline_block_tree(request, course_key_string, None)
@@ -325,6 +346,7 @@ class OutlineTabView(RetrieveAPIView):
             'resume_course': resume_course,
             'user_has_passing_grade': user_has_passing_grade,
             'welcome_message_html': welcome_message_html,
+            'course_units': course_units,  # Add units to the response
         }
         context = self.get_serializer_context()
         context['course_overview'] = course_overview
