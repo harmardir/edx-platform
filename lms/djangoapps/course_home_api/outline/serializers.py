@@ -41,8 +41,7 @@ class CourseBlockSerializer(serializers.Serializer):
 
         serialized = {
             block_key: {
-                'children': [self.get_blocks(child) for child in children],
-                #'children': [child['id'] for child in children],
+                'children': [child['id'] for child in children],
                 'complete': block.get('complete', False),
                 'description': description,
                 'display_name': display_name,
@@ -129,24 +128,3 @@ class OutlineTabSerializer(DatesBannerSerializer, VerifiedModeSerializer):
     resume_course = ResumeCourseSerializer()
     welcome_message_html = serializers.CharField()
     user_has_passing_grade = serializers.BooleanField()
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        course_blocks = representation.get('course_blocks', {})
-        if 'children' in course_blocks:
-            for chapter in course_blocks['children']:
-                for sequential in chapter.get('children', []):
-                    sequential['children'] = [self.serialize_unit(unit) for unit in sequential.get('children', [])]
-        return representation
-
-    def serialize_unit(self, unit):
-        serialized_unit = {
-            'id': unit['id'],
-            'display_name': unit['display_name'],
-            'type': unit['type'],
-            'description': unit['description'],
-            'complete': unit.get('complete', False),
-            'lms_web_url': unit['lms_web_url'],
-            # Add any other fields you need to serialize for units
-        }
-        return serialized_unit

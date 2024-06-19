@@ -222,9 +222,7 @@ class OutlineTabView(RetrieveAPIView):
         show_enrolled = is_enrolled or is_staff
         enable_proctored_exams = False
         if show_enrolled:
-            # Fetch course outline with units/verticals
             course_blocks = get_course_outline_block_tree(request, course_key_string, request.user)
-            #course_blocks = get_course_outline_block_tree(request, course_key_string, request.user)
             date_blocks = get_course_date_blocks(course, request.user, request, num_assignments=1)
             dates_widget['course_date_blocks'] = [block for block in date_blocks if not isinstance(block, TodaysDate)]
 
@@ -294,8 +292,7 @@ class OutlineTabView(RetrieveAPIView):
             # through the chapters (sections) to look for sequences to remove.
             for chapter_data in course_blocks.get('children', []):
                 chapter_data['children'] = [
-                    #seq_data
-                    self.prepare_block_data(seq_data, available_seq_ids)
+                    seq_data
                     for seq_data in chapter_data['children']
                     if (
                         seq_data['id'] in available_seq_ids or
@@ -336,16 +333,6 @@ class OutlineTabView(RetrieveAPIView):
         serializer = self.get_serializer_class()(data, context=context)
 
         return Response(serializer.data)
-    
-    def prepare_block_data(self, block_data, available_seq_ids):
-        """
-        Prepare block data by filtering children based on available sequence ids.
-        """
-        block_data['children'] = [
-            child for child in block_data.get('children', [])
-            if child['id'] in available_seq_ids
-        ]
-        return block_data
 
     def finalize_response(self, request, response, *args, **kwargs):
         """
