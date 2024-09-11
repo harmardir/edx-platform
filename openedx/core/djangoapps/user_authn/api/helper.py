@@ -101,6 +101,8 @@ class RegistrationFieldsContext(APIView):
                     'institution_type',
                     'age_bracket',
                     'disability',
+                    'school_name',
+                    'school_grade',
                 ]))
 
     def get_fields(self):
