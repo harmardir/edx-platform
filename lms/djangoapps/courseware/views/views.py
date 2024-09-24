@@ -133,6 +133,8 @@ from ..module_render import get_module, get_module_by_usage_id, get_module_for_d
 from ..tabs import _get_dynamic_tabs
 from ..toggles import COURSEWARE_OPTIMIZED_RENDER_XBLOCK
 
+from django.views.decorators.cache import never_cache
+
 log = logging.getLogger("edx.courseware")
 
 
@@ -262,6 +264,7 @@ def user_groups(user):
 
 
 @ensure_csrf_cookie
+@never_cache
 def courses(request):
     """
     Render "find courses" page. The course selection work is done in courseware.courses.
