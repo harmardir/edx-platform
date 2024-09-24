@@ -292,7 +292,7 @@ def courses(request):
     else:
         template = "courseware/courses.html"
 
-    return render_to_response(
+    response = render_to_response(
         template,
         {
             'courses': courses_list,
@@ -301,6 +301,11 @@ def courses(request):
             'request_type': request_type,  # Pass this for any conditional logic in templates
         }
     )
+    response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
+    
+    return response
 
 
 class PerUserVideoMetadataThrottle(UserRateThrottle):
