@@ -294,7 +294,7 @@ def courses(request):
 
 @ensure_csrf_cookie
 @cache_if_anonymous()
-def for_students(request):
+def courses_for_students(request):
     """
     Render the "for students" page located in the courseware folder. 
     """
@@ -323,7 +323,7 @@ def for_students(request):
 
 @ensure_csrf_cookie
 @cache_if_anonymous()
-def for_employees(request):
+def courses_for_employees(request):
     """
     Render the "for employees" page located in the courseware folder. 
     """
