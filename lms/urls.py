@@ -355,9 +355,9 @@ urlpatterns += [
 
     re_path(r'^courses/?$', branding_views.courses, name='courses'),
 
-    re_path(r'^courses/for_students/?$', branding_views.courses_for_students, name='courses_for_students'),
+    re_path(r'^courses/for_students/?$', courseware_views.courses_for_students, name='courses_for_students'),
 
-    re_path(r'^courses/for_employees/?$', branding_views.courses_for_employees, name='courses_for_employees'),
+    re_path(r'^courses/for_employees/?$', courseware_views.courses_for_employees, name='courses_for_employees'),
 
 
 
