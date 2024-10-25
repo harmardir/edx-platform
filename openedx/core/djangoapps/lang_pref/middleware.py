@@ -85,5 +85,16 @@ class LanguagePreferenceMiddleware(MiddlewareMixin):
                 lang_pref_helpers.set_language_cookie(request, response, user_pref)
             else:
                 lang_pref_helpers.unset_language_cookie(response)
+        else: 
+
+            cookie_lang = lang_pref_helpers.get_language_cookie(request) 
+
+            if cookie_lang: 
+
+                lang_pref_helpers.set_language_cookie(request, response, cookie_lang) 
+
+            else: 
+
+                lang_pref_helpers.set_language_cookie(request, response, "ar")
 
         return response
