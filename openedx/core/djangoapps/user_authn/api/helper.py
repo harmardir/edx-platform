@@ -95,7 +95,7 @@ class RegistrationFieldsContext(APIView):
         """
         return (field in self.user_profile_fields or field in ["terms_of_service", "honor_code"] or
                 field in configuration_helpers.get_value('extended_profile_fields', [
-                    'country',
+                    'custom_country',
                     'city',
                     'institution_name',
                     'institution_type',
