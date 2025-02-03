@@ -18,6 +18,7 @@ urlpatterns = [
     path('blog', views.render, {'template': 'blog.html'}, name="blog"),
     path('contact', views.render, {'template': 'contact.html'}, name="contact"),
     path('donate', views.render, {'template': 'donate.html'}, name="donate"),
+    path('partners', views.render, {'template': 'partners.html'}, name="partners"),
     path('faq', views.render, {'template': 'faq.html'}, name="faq"),
     path('help', views.render, {'template': 'help.html'}, name="help_edx"),
     path('jobs', views.render, {'template': 'jobs.html'}, name="jobs"),
