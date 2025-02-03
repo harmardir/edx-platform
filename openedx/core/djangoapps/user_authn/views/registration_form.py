@@ -561,7 +561,7 @@ class RegistrationFormFactory:
         """
         # Translators: This label appears above a field on the registration form
         # meant to hold the user's public username.
-        username_label = _("Public Username")
+        username_label = _("اسم المستخدم (Username)")
 
         username_instructions = _(
             # Translators: These instructions appear on the registration form, immediately
