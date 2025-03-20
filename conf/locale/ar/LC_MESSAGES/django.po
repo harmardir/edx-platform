@@ -635,7 +635,7 @@ msgstr "أنثى"
 #. Translators: 'Other' refers to the student's gender
 #: common/djangoapps/student/models.py
 msgid "Other/Prefer Not to Say"
-msgstr "أخرى/ أفضّل عدم الإفصاح"
+msgstr "أخرى/ أفضّل عدم الإفصاحإجابة"
 
 #: common/djangoapps/student/models.py
 msgid "Doctorate"
@@ -3464,7 +3464,7 @@ msgstr "مخطّط المنهج الدراسي"
 
 #: lms/djangoapps/courseware/tabs.py
 msgid "Dates"
-msgstr "التواريخ"
+msgstr "تواريخ مهمة"
 
 #: lms/djangoapps/courseware/views/index.py
 #, python-brace-format
