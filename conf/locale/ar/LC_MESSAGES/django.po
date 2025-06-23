@@ -6695,7 +6695,7 @@ msgstr "'%s' ليس نطاقًا صحيحًا."
 #: lms/templates/courseware/courseware.html
 #: openedx/features/course_bookmarks/templates/course_bookmarks/course-bookmarks.html
 msgid "Bookmarks"
-msgstr "الإشارات المرجعية"
+msgstr "الصفحات المحفوظة"
 
 #: openedx/core/djangoapps/bookmarks/views.py
 msgid "An error has occurred. Please try again."
