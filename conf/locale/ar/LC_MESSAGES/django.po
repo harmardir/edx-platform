@@ -10078,7 +10078,7 @@ msgstr "يجب إعادة ضبط المسألة قبل تقديم الحل مر�
 #: xmodule/capa_module.py
 #, python-brace-format
 msgid "You must wait at least {wait} seconds between submissions."
-msgstr "يجب أن تنتظر ما لا يقلّ عن {wait} ثوانٍ بين كل تقديمين متتاليين."
+msgstr "يجب أن تنتظر ما لا يقلّ عن {wait} بين كل تقديمين متتاليين."
 
 #: xmodule/capa_module.py
 #, python-brace-format
@@ -10086,8 +10086,8 @@ msgid ""
 "You must wait at least {wait_secs} between submissions. {remaining_secs} "
 "remaining."
 msgstr ""
-"يجب أن تنتظر ما لا يقلّ عن {wait_secs} ثوان بين كل تقديمين متتاليين. بقِيَت "
-"{remaining_secs} ثوان."
+"يجب أن تنتظر ما لا يقلّ عن {wait_secs} بين كل تقديمين متتاليين. بقِيَت "
+"{remaining_secs}."
 
 #: xmodule/capa_module.py
 #, python-brace-format
