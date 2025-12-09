@@ -99,8 +99,12 @@ class RegistrationFieldsContext(APIView):
                     'city',
                     'institution_name',
                     'institution_type',
+                    'institution_type_other', 
                     'department',
+                    'department_other' 
                     'job_position',
+                    'job_position_other', 
+
                 ]))
 
     def get_fields(self):
