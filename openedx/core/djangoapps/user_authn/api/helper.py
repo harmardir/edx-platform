@@ -101,7 +101,7 @@ class RegistrationFieldsContext(APIView):
                     'institution_type',
                     'institution_type_other', 
                     'department',
-                    'department_other' 
+                    'department_other', 
                     'job_position',
                     'job_position_other', 
 
